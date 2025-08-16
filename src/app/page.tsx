@@ -1,43 +1,29 @@
-"use client";
-
+'use client';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { impactOccurred } from '@/lib/haptics';
 
-export default function Page() {
+export default function HomePage() {
   const router = useRouter();
+  
   return (
-    <div className="bg-[--astrot-bg] text-[--astrot-text]">
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.18 }}
-        className="space-y-4"
-      >
-        <Card className="py-5 transition-transform hover:scale-[1.01] active:scale-[0.99]">
-          <h2 className="text-lg font-semibold">Ежедневка</h2>
-          <p className="text-sm text-astrot-muted">Ваши ежедневные подсказки появятся здесь.</p>
-        </Card>
-        <Card className="py-5 transition-transform hover:scale-[1.01] active:scale-[0.99]">
-          <h2 className="text-lg font-semibold">Ближайшие события</h2>
-          <p className="text-sm text-astrot-muted">Скоро тут будут важные астрособытия.</p>
-        </Card>
-        <Card className="py-5 transition-transform hover:scale-[1.01] active:scale-[0.99]">
-          <h2 className="text-lg font-semibold">Календарь‑тизер</h2>
-          <p className="text-sm text-astrot-muted mb-3">Переход к полному астро‑календарю.</p>
-          <Button
-            className="bg-[rgb(var(--astrot-accent))] text-white rounded-full px-4 py-2 text-sm font-medium shadow-md hover:bg-opacity-90 transition"
-            onClick={() => {
-              impactOccurred('light');
-              router.push('/calendar');
-            }}
-          >
-            Открыть календарь
-          </Button>
-        </Card>
-      </motion.div>
-    </div>
+    <main className="page">
+      <section className="card">
+        <h2 style={{fontSize:22, fontWeight:800}}>Добро пожаловать в Astrot v6</h2>
+        <p style={{color:'var(--hint)', marginBottom:16}}>Ваша личная астрология на Swiss Ephemeris с OpenAI интерпретациями</p>
+        <button className="btn" onClick={() => router.push('/chart')}>
+          Рассчитать натальную карту
+        </button>
+      </section>
+      
+      <section className="card">
+        <h3 style={{fontSize:18, fontWeight:700}}>Возможности</h3>
+        <ul style={{lineHeight:1.6, color:'var(--hint)'}}>
+          <li>• Точные расчёты на Swiss Ephemeris</li>
+          <li>• Планеты, дома, аспекты</li>
+          <li>• AI-интерпретации через OpenAI</li>
+          <li>• Адаптивный fullscreen UI</li>
+          <li>• Поддержка Telegram Mini Apps</li>
+        </ul>
+      </section>
+    </main>
   );
 }

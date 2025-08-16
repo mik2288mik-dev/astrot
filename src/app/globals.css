@@ -1,87 +1,54 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  /* Astrot brand — dark cosmic theme */
-  --astrot-bg: 14 13 27;        /* #0E0D1B */
-  --astrot-surface: 26 26 46;   /* #1A1A2E */
-  --astrot-accent: 124 93 250;  /* #7C5DFA */
-  --astrot-muted: 161 161 178;  /* #A1A1B2 */
-  --astrot-text: 255 255 255;   /* #FFFFFF */
-  --astrot-card-bg: var(--astrot-surface);
-  --astrot-border: 255 255 255;
-
-  /* Telegram theme variables are mapped to Astrot brand */
-  --tg-bg-color: var(--astrot-bg);
-  --tg-text-color: var(--astrot-text);
-  --tg-hint-color: var(--astrot-muted);
-  --tg-link-color: var(--astrot-accent);
-  --tg-button-color: var(--astrot-accent);
-  --tg-button-text-color: var(--astrot-text);
-  /* Standard Telegram naming fallbacks */
-  --tg-theme-bg-color: var(--tg-bg-color);
-  --tg-theme-text-color: var(--tg-text-color);
-  --tg-theme-hint-color: var(--tg-hint-color);
-  --tg-theme-link-color: var(--tg-link-color);
-  --tg-theme-button-color: var(--tg-button-color);
-  --tg-theme-button-text-color: var(--tg-button-text-color);
-
-  --bottom-nav-height: 64px;
-  --bottom-nav-total: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
-
-  /* fallback если TWA var не прилетела */
-  --tg-viewport-height: 100%;
-  --tg-viewport-stable-height: 100%;
-  --app-viewport-height: 100%;
+:root{
+  --tg-viewport-height: 100dvh;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --bg: var(--tg-theme-bg-color, #0e0d1b);
+  --fg: var(--tg-theme-text-color, #fff);
+  --hint: var(--tg-theme-hint-color, #a5a7ac);
+  --accent: var(--tg-theme-button-color, #6d4cff);
+  --accent-fg: var(--tg-theme-button-text-color, #fff);
+  --radius: 20px;
+}
+html, body, #__next, #app-root { height: 100%; min-height: 100%; }
+body{ margin:0; background:var(--bg); color:var(--fg); }
+.app-shell{
+  height: var(--tg-viewport-height);
+  min-height: var(--tg-viewport-height);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.page{
+  flex:1 1 auto; display:flex; flex-direction:column;
+  padding: max(12px, var(--safe-top)) 16px calc(12px + var(--bottom-nav-h,0px) + var(--safe-bottom));
+  gap: 12px; overflow:auto; -webkit-overflow-scrolling:touch;
+}
+.card{
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--bg) 92%, #000);
+  border: 1px solid color-mix(in oklab, var(--bg) 60%, #fff);
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+  padding: 16px;
+}
+.btn{ background:var(--accent); color:var(--accent-fg); border:0; border-radius:14px; padding:14px 16px; font-weight:700; }
+.btn:disabled{ opacity:.7 }
+.bottom-nav{
+  position:fixed; left:0; right:0; bottom:0; z-index:50;
+  height: calc(64px + var(--safe-bottom));
+  --bottom-nav-h: calc(64px + var(--safe-bottom));
+  background: color-mix(in oklab, var(--bg) 90%, #000);
+  border-top: 1px solid color-mix(in oklab, var(--bg) 65%, #fff);
+  display:flex; align-items:center; justify-content:space-around;
+  padding-bottom: var(--safe-bottom);
+}
+.fab{
+  position:absolute; left:50%; transform:translateX(-50%) translateY(-24px);
+  width:64px; height:64px; border-radius:9999px; background:var(--accent); color:var(--accent-fg);
+  display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 10px 30px rgba(0,0,0,.45);
 }
 
-/* Pastel light theme variant */
-:root[data-color-scheme='light'] {
-  --astrot-bg: 247 247 251;      /* #F7F7FB */
-  --astrot-surface: 255 255 255; /* #FFFFFF */
-  --astrot-accent: 124 93 250;   /* #7C5DFA */
-  --astrot-muted: 138 140 153;   /* ~#8A8C99 */
-  --astrot-text: 14 13 27;       /* #0E0D1B */
-  --astrot-card-bg: var(--astrot-surface);
-  --astrot-border: 0 0 0;
+/* Form elements */
+input, select{
+  width:100%; border-radius:12px; padding:12px 14px; font-size:14px; border:1px solid color-mix(in oklab, var(--bg) 65%, #fff);
+  background:color-mix(in oklab, var(--bg) 95%, #000); color:var(--fg);
 }
-
-html, body, #__next, [data-app-root] {
-  height: 100%;
-  min-height: 100%;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* убираем двойные скроллы */
-  -webkit-tap-highlight-color: transparent;
-  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: rgb(var(--tg-theme-bg-color));
-  color: rgb(var(--tg-theme-text-color));
-  overscroll-behavior-y: contain;
-}
-
-/* Главная обёртка приложения должна использовать стабильную высоту */
-.app-shell {
-  height: var(--app-viewport-height);
-  min-height: var(--app-viewport-height);
-  display: flex;
-  flex-direction: column;
-}
-
-* { outline-color: rgb(var(--astrot-accent)); }
-
-.safe-area-b {
-  padding-bottom: calc(env(safe-area-inset-bottom));
-}
-
-@layer base {
-  h1 { @apply text-base md:text-lg font-semibold; }
-  h2 { @apply text-sm text-astrot-muted; }
-}
-
-.card {
-  @apply bg-astrot-card-bg shadow-card rounded-xl border border-[color:rgb(var(--astrot-border)/0.08)];
-}
+input:focus, select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+label{ display:block; font-size:12px; color:var(--hint); margin-bottom:4px; font-weight:500; }

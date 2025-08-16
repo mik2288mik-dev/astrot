@@ -51,18 +51,7 @@ export interface EphemerisAdapter {
 }
 
 export async function getEphemerisAdapter(): Promise<EphemerisAdapter> {
-  const useWasm = (process.env.USE_SWE_WASM || '').toLowerCase() === 'true';
-  if (!useWasm) {
-    try {
-      // Probe if swisseph is resolvable in runtime; if not, will throw
-      const modName: string = 'swisseph';
-      await import(modName as any);
-      const mod = await import('./node-swisseph');
-      return new mod.NodeSwissephAdapter();
-    } catch (err) {
-      // Fallback to WASM when native swisseph unavailable
-    }
-  }
+  // Force WASM usage since swisseph is not available in deployment
   const wasmMod = await import('./swe-wasm');
   return new wasmMod.SweWasmAdapter();
 }
@@ -90,5 +79,5 @@ export function computeJulianDayUT(input: ComputeInput): number {
 export function signFromLongitude(lon: number): string {
   const signs = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
   const idx = Math.floor(((lon % 360) + 360) % 360 / 30);
-  return signs[idx];
+  return signs[idx] || 'Aries'; // Fallback to Aries if index is out of bounds
 }
